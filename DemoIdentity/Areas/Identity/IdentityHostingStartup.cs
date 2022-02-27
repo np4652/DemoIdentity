@@ -14,12 +14,18 @@ namespace DemoIdentity.Areas.Identity
     {
         public void Configure(IWebHostBuilder builder)
         {
-            builder.ConfigureServices((context, services) => {
+            builder.ConfigureServices((context, services) =>
+            {
                 services.AddDbContext<DemoIdentityContext>(options =>
                     options.UseSqlServer(
                         context.Configuration.GetConnectionString("ContextConnection")));
 
-                services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                services.AddDefaultIdentity<IdentityUser>(options =>
+                {
+                    options.SignIn.RequireConfirmedAccount = true;
+                    options.Lockout.DefaultLockoutTimeSpan= TimeSpan.FromMinutes(1);
+                    options.Lockout.MaxFailedAccessAttempts = 3;
+                })
                     .AddEntityFrameworkStores<DemoIdentityContext>();
             });
         }
